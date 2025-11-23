@@ -1,0 +1,85 @@
+<main class="auth-container">
+
+  <div class="auth-card">
+
+    <h2 class="auth-title">Registro de Usuario</h2>
+    <p class="auth-subtitle">Crea tu cuenta para gestionar análisis y laboratorios</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="registrar()" novalidate>
+
+      <input id="rol" type="text" formControlName="rol" placeholder="Tu rol" hidden>
+
+
+      <!-- Nombre -->
+      <div class="form-group">
+        <label>Nombre</label>
+        <input id="nombre" type="text" formControlName="nombre" placeholder="Tu nombre">
+        <div class="error" *ngIf="f['nombre'].invalid && f['nombre'].touched">
+          Nombre es obligatorio.
+        </div>
+      </div>
+
+      <!-- Apellido -->
+      <div class="form-group">
+        <label>Apellido</label>
+        <input id="apellido" type="text" formControlName="apellido" placeholder="Tu apellido">
+        <div class="error" *ngIf="f['apellido'].invalid && f['apellido'].touched">
+          Apellido es obligatorio.
+        </div>
+      </div>
+
+      <!-- correo -->
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input id="correo" type="correo" formControlName="correo" placeholder="ejemplo@correo.com">
+        <div class="error" *ngIf="f['correo'].invalid && f['correo'].touched">
+          correo inválido.
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input id="password" type="password" formControlName="password" placeholder="••••••">
+        <div class="error" *ngIf="f['password'].invalid && f['password'].touched">
+          Mínimo 4 caracteres.
+        </div>
+      </div>
+
+      <!-- Repetir contraseña -->
+      <div class="form-group">
+        <label>Repite la contraseña</label>
+        <input id="password2" type="password" formControlName="password2" placeholder="••••••">
+        <div class="error"
+             *ngIf="registerForm.errors?.['contrasenasNoCoinciden'] && f['password2'].touched">
+          Las contraseñas no coinciden.
+        </div>
+      </div>
+
+      <div *ngIf="rol === 'ADMIN'" class="form-group">
+        <label>Estado</label>
+        <select id="estado" class="form-select" formControlName="estado">
+            <option value="1">Activo</option>
+            <option value="0">Inactivo</option>
+        </select>
+        <div class="error" *ngIf="f['estado'].invalid && f['estado'].touched">
+          
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <button type="submit" class="auth-btn">Registrarse</button>
+
+      <!-- Mensajes -->
+      <div class="alert error-alert" *ngIf="error">{{ error }}</div>
+      <div class="alert success-alert" *ngIf="exito">{{ exito }}</div>
+
+      <div class="auth-link">
+        <a routerLink="/login">Volver</a>
+      </div>
+
+    </form>
+
+  </div>
+
+</main>

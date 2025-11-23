@@ -1,0 +1,112 @@
+/* ===== NAVBAR ===== */
+
+.navbar-header {
+  width: 100%;
+  background: linear-gradient(90deg, #0099e6, #4db8ff);
+  padding: 12px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-container {
+  width: 95%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LOGO + TITLE */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.navbar-logo {
+  height: 48px;
+  margin-right: 10px;
+}
+
+.navbar-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+/* MENU */
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Link estilo navbar */
+.nav-link {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.20);
+}
+
+/* BOTÓN CERRAR SESIÓN */
+.btn-logout {
+  background: #ffffff;
+  color: #d9534f;
+  border: 2px solid #d9534f;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-logout:hover {
+  background: #d9534f;
+  color: #ffffff;
+}
+
+.logo-img {
+  height: 60px;   /* antes 40px */
+  margin-right: 10px;
+}
+.header-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 10px; /* opcional */
+}
+.nav-links {
+  display: flex;
+  gap: 25px;
+  margin-left: 40px; /* acerca las rutas hacia el logo */
+}
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+app-header {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.main-container, .content-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}

@@ -1,0 +1,40 @@
+<main class="auth-container">
+
+  <div class="auth-card">
+
+    <h2 class="auth-title">Recuperar Contraseña</h2>
+
+    <form [formGroup]="recoverForm" (ngSubmit)="recuperar()" novalidate>
+
+      <!-- Nombre -->
+      <div class="form-group">
+        <label for="email" class="form-label">Correo electrónico</label>
+        <input
+            type="email"
+            class="form-control"
+            id="email"
+            formControlName="email"
+            [class.is-invalid]="f['email'].invalid && f['email'].touched"
+        >
+        <div *ngIf="f['email'].invalid && f['email'].touched" class="invalid-feedback">
+            Ingresa un correo válido.
+        </div>
+      </div>
+
+
+      <!-- Botón -->
+      <button type="submit" class="auth-btn">Recuperar</button>
+
+      <!-- Mensajes -->
+    <div *ngIf="mensaje" class="alert alert-success text-center">{{ mensaje }}</div>
+    <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+      <div class="auth-link">
+        <a routerLink="/login">Volver</a>
+      </div>
+
+    </form>
+
+  </div>
+
+</main>

@@ -1,0 +1,63 @@
+<app-header></app-header>
+
+<main class="container my-5  mt-3">
+
+  <div class="results-card shadow-lg">
+    <h2 class="text-center mb-4">Resultados de Análisis BioResult</h2>
+
+    <div class="text-end">
+        <a class="btn-crear" routerLink="/detalle-resultado">Crear resultado</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table results-table align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Examen</th>
+            <th>Tipo de Análisis</th>
+            <th>Laboratorio</th>
+            <th>Valores</th>
+            <th>Observaciones</th>
+            <th>Fecha</th>
+            <th class="text-center">Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let r of resultados">
+            <td>{{ r.idResultado }}</td>
+            <td>{{ r.idExamen }}</td>
+            <td>{{ r.tipoAnalisis }}</td>
+            <td>{{ r.laboratorio }}</td>
+            <td class="small-text">{{ r.valoresResultado }}</td>
+            <td class="small-text">{{ r.observaciones }}</td>
+            <td>{{ r.fechaResultado | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td class="text-center">
+              <span class="estado-badge estado-{{ r.estado | lowercase }}">
+                {{ r.estado }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn-sm btn-accion btn-editar btn-outline-primary" (click)="editar(r.idResultado)">Editar</button>
+              <button class="btn-delete btn-sm btn-accion btn-eliminar btn-outline-danger" (click)="abrirModal(r.idResultado)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    <app-confirm-modal
+        *ngIf="mostrarModal"
+        titulo="Eliminar resultado"
+        mensaje="¿Estás seguro de eliminar este registro? Esta acción no se puede deshacer."
+        (onConfirm)="confirmarEliminacion()"
+        (onCancel)="cancelar()">
+    </app-confirm-modal>
+
+
+    </div>
+  </div>
+
+
+
+</main>

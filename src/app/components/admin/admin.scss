@@ -1,0 +1,40 @@
+.btn-crear {
+  display: inline-block;
+  background-color: #009ade;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: 0.25s ease-in-out;
+  border: 1px solid #007bb0;
+}
+
+.btn-crear:hover {
+  background-color: #007bb0;
+}
+
+.btn-editar {
+  background-color: #e8f2ff;
+  color: #0062b1;
+  border-color: #a7c9f1;
+}
+
+.btn-editar:hover {
+  background-color: #cde0ff;
+}
+.btn-accion {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  width: 90px;                     /* MISMO TAMAÑO */
+  display: inline-block;
+  text-align: center;
+  margin-right: 6px;               /* SEPARACIÓN ENTRE BOTONES */
+  transition: 0.25s ease;
+  margin-bottom: 2px;
+}
