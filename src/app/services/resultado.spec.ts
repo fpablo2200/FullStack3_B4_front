@@ -5,7 +5,7 @@ import { ResultadoService } from './resultado';
 describe('ResultadoService', () => {
   let service: ResultadoService;
   let httpMock: HttpTestingController;
-  const apiUrl = 'http://localhost:8080/resultados';
+  const apiUrl = 'http://localhost:9090/resultados';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
