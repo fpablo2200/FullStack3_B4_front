@@ -6,6 +6,8 @@ import { routes } from '../../app.routes';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PLATFORM_ID } from '@angular/core';
 import { AuthService } from '../../services/auth';
+import { StorageService } from '../../services/storage.service';
+import { LoggerService } from '../../services/logger.service';
 import { of, throwError } from 'rxjs';
 
 describe('LoginComponent', () => {
@@ -18,7 +20,7 @@ describe('LoginComponent', () => {
     nombre: 'Juan',
     apellido: 'Pérez',
     correo: 'juan@example.com',
-    rol: 'USER'
+    rol: 'USER' as const
   };
 
   beforeEach(async () => {
@@ -27,6 +29,8 @@ describe('LoginComponent', () => {
       providers: [
         provideRouter(routes),
         AuthService,
+        StorageService,
+        LoggerService,
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     })

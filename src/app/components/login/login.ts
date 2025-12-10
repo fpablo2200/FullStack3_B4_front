@@ -2,10 +2,13 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { StorageService } from '../../services/storage.service';
+import { LoggerService } from '../../services/logger.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PLATFORM_ID } from '@angular/core';
+import { Sesion } from '../../models/sesion.model';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +28,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private router: Router, 
-    private auth: AuthService
+    private auth: AuthService,
+    private storage: StorageService,
+    private logger: LoggerService
   ) {}
 
   ngOnInit(): void {
@@ -60,20 +65,21 @@ export class LoginComponent implements OnInit {
     }).subscribe({
       next: (usuario) => {
         
-        localStorage.setItem('sesion', JSON.stringify({
+        const sesion: Sesion = {
           logueado: true,
           usuario: usuario.nombre + ' ' + usuario.apellido,
           correo: usuario.correo,
           rol: usuario.rol
-        }));
+        };
 
+        this.storage.setItem<Sesion>('sesion', sesion);
         this.loading = false;
 
         // Redirección usando Router
         this.router.navigate(['/lista-resultado']);
       },
       error: (err) => {
-        console.error('Error login:', err);
+        this.logger.error('Error login', err);
         this.error = true;
         this.loading = false;
       }

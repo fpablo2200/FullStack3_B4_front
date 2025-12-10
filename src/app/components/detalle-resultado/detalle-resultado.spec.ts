@@ -20,7 +20,7 @@ describe('DetalleResultado', () => {
     valoresResultado: 'Normal',
     observaciones: 'Sin observaciones',
     fechaResultado: '2025-01-01',
-    estado: 'VALIDADO'
+    estado: 'VALIDADO' as const
   };
 
   beforeEach(async () => {
@@ -118,7 +118,7 @@ describe('DetalleResultado', () => {
     component.editingId = 1;
     component.detalleForm.patchValue(mockResultado);
     
-    spyOn(resultadoService, 'actualizar').and.returnValue(of({}));
+    spyOn(resultadoService, 'actualizar').and.returnValue(of(mockResultado));
     spyOn(router, 'navigate');
     
     component.guardar();
@@ -149,7 +149,7 @@ describe('DetalleResultado', () => {
     component.ngOnInit();
     component.detalleForm.patchValue(mockResultado);
     
-    spyOn(resultadoService, 'crear').and.returnValue(of({}));
+    spyOn(resultadoService, 'crear').and.returnValue(of(mockResultado));
     spyOn(router, 'navigate');
     
     component.guardar();

@@ -3,6 +3,8 @@ import { Header } from './header';
 import { provideRouter, Router } from '@angular/router';
 import { routes } from '../../app.routes';
 import { AuthService } from '../../services/auth';
+import { StorageService } from '../../services/storage.service';
+import { LoggerService } from '../../services/logger.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { of } from 'rxjs';
@@ -19,6 +21,8 @@ describe('Header', () => {
       providers: [
         provideRouter(routes),
         AuthService,
+        StorageService,
+        LoggerService,
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     })

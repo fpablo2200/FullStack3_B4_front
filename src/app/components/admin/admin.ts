@@ -3,6 +3,9 @@ import { Header } from '../header/header';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { LoggerService } from '../../services/logger.service';
+import { environment } from '../../../environments/environment';
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-admin',
@@ -12,11 +15,12 @@ import { Router, RouterModule } from '@angular/router';
   imports: [ Header, RouterModule, CommonModule],
 })
 export class AdminComponent implements OnInit {
-  usuarios: any[] = [];
+  usuarios: Usuario[] = [];
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private logger: LoggerService
   ) {}
 
   ngOnInit(): void {
@@ -28,13 +32,13 @@ export class AdminComponent implements OnInit {
   }
 
   cargarUsuariosDesdeAPI() {
-    this.http.get<any[]>('http://localhost:8080/usuarios')
+    this.http.get<Usuario[]>(`${environment.apiUrl}/usuarios`)
       .subscribe({
         next: (data) => {
           this.usuarios = data;
         },
         error: (err) => {
-          console.error('Error al cargar usuarios', err);
+          this.logger.error('Error al cargar usuarios', err);
         }
       });
   }

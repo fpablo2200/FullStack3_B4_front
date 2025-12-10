@@ -2,6 +2,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { StorageService } from '../../services/storage.service';
+import { Sesion } from '../../models/sesion.model';
 
 @Component({
   selector: 'app-header',
@@ -12,14 +14,16 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class Header {
   rol: string | null = null;
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private storage: StorageService
+  ) {}
 
    ngOnInit() {
-    const sesion = localStorage.getItem('sesion');
+    const sesion = this.storage.getItem<Sesion>('sesion');
 
     if (sesion) {
-      const data = JSON.parse(sesion);
-      this.rol = data.rol;
+      this.rol = sesion.rol;
     }
   }
 
@@ -29,7 +33,7 @@ export class Header {
 
   logout() {
     // limpiar sesión y navegar a login
-    localStorage.removeItem('sesion');
+    this.storage.removeItem('sesion');
     this.router.navigate(['/login']);
   }
 

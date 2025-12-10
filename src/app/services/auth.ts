@@ -1,29 +1,38 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
+import { LoggerService } from './logger.service';
+import { Usuario, LoginCredentials, LoginResponse } from '../models/usuario.model';
+import { Sesion } from '../models/sesion.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/usuarios';
+  private apiUrl = `${environment.apiUrl}/usuarios`;
   private platformId = inject(PLATFORM_ID);
 
-  private sesionSubject = new BehaviorSubject<any>(this.getSesion());
-  sesion$ = this.sesionSubject.asObservable();
+  private sesionSubject!: BehaviorSubject<Sesion | null>;
+  sesion$!: Observable<Sesion | null>;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private storage: StorageService,
+    private logger: LoggerService
+  ) {
+    this.sesionSubject = new BehaviorSubject<Sesion | null>(this.getSesion());
+    this.sesion$ = this.sesionSubject.asObservable();
+  }
 
 
- getSesion() {
+ getSesion(): Sesion | null {
     if (!isPlatformBrowser(this.platformId)) return null;
-
-    const sesion = localStorage.getItem('sesion');
-    return sesion ? JSON.parse(sesion) : null;
+    return this.storage.getItem<Sesion>('sesion');
   }
 
   estaLogueado(): boolean {
@@ -33,43 +42,44 @@ export class AuthService {
 
   esAdmin(): boolean {
     const sesion = this.getSesion();
-    return sesion?.rol === 'ADMIN';   //  <--- CORREGIDO
+    return sesion?.rol === 'ADMIN';
   }
 
-  iniciarSesion(sesionData: any): void {
+  iniciarSesion(sesionData: Sesion): void {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('sesion', JSON.stringify(sesionData));
+      this.storage.setItem('sesion', sesionData);
     }
     this.sesionSubject.next(sesionData);
   }
 
   cerrarSesion(): void {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('sesion');
+      this.storage.removeItem('sesion');
     }
     this.sesionSubject.next(null);
   }
 
-  login(credentials: { correo: string; password: string }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, credentials);
+  login(credentials: LoginCredentials): Observable<LoginResponse> {
+    this.logger.debug('Attempting login', credentials.correo);
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
   }
 
-  verificarCorreo(correo: string) {
+  verificarCorreo(correo: string): Observable<{ existe: boolean }> {
     return this.http.get<{ existe: boolean }>(
-      `http://localhost:8080/usuarios/verificar-correo?correo=${correo}`
+      `${this.apiUrl}/verificar-correo?correo=${correo}`
     );
   }
 
-  registrarUsuario(usuario: any) {
-    return this.http.post('http://localhost:8080/usuarios', usuario);
+  registrarUsuario(usuario: Partial<Usuario>): Observable<Usuario> {
+    return this.http.post<Usuario>(this.apiUrl, usuario);
   }
 
-  obtenerUsuario(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+  obtenerUsuario(id: number): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.apiUrl}/${id}`);
   }
   
-  actualizarUsuario(id: number, usuario: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, usuario);
+  actualizarUsuario(id: number, usuario: Partial<Usuario>): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/${id}`, usuario);
   }
   
 

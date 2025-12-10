@@ -13,7 +13,7 @@ describe('ListaResultadoComponent', () => {
   let resultadoService: ResultadoService;
   let router: Router;
 
-  const mockResultados = [
+  const mockResultados: any[] = [
     {
       idResultado: 1,
       idExamen: '123',
@@ -22,7 +22,7 @@ describe('ListaResultadoComponent', () => {
       valoresResultado: 'Normal',
       observaciones: 'Sin observaciones',
       fechaResultado: '2025-01-01',
-      estado: 'VALIDADO'
+      estado: 'VALIDADO' as const
     },
     {
       idResultado: 2,
@@ -32,7 +32,7 @@ describe('ListaResultadoComponent', () => {
       valoresResultado: 'Anormal',
       observaciones: 'Revisar',
       fechaResultado: '2025-01-02',
-      estado: 'PENDIENTE'
+      estado: 'PENDIENTE' as const
     }
   ];
 
@@ -108,7 +108,7 @@ describe('ListaResultadoComponent', () => {
     component.resultados = [...mockResultados];
     component.idSeleccionado = 1;
     
-    spyOn(resultadoService, 'eliminarResultado').and.returnValue(of({}));
+    spyOn(resultadoService, 'eliminarResultado').and.returnValue(of(void 0));
     
     component.confirmarEliminacion();
     

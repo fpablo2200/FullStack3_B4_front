@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminComponent } from './admin';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter, Router } from '@angular/router';
+import { LoggerService } from '../../services/logger.service';
 import { routes } from '../../app.routes';
 import { CommonModule } from '@angular/common';
 import 'zone.js';
@@ -41,8 +42,8 @@ describe('Admin', () => {
 
   it('should load usuarios on ngOnInit', () => {
     const mockUsuarios = [
-      { id: 1, nombre: 'User1', correo: 'user1@test.com' },
-      { id: 2, nombre: 'User2', correo: 'user2@test.com' }
+      { id: 1, nombre: 'User1', apellido: 'Test1', correo: 'user1@test.com', rol: 'USER' as const, estado: '1' as const },
+      { id: 2, nombre: 'User2', apellido: 'Test2', correo: 'user2@test.com', rol: 'ADMIN' as const, estado: '1' as const }
     ];
 
     component.ngOnInit();
@@ -54,12 +55,13 @@ describe('Admin', () => {
   });
 
   it('should handle error when loading usuarios', () => {
-    spyOn(console, 'error');
+    const loggerService = TestBed.inject(LoggerService);
+    spyOn(loggerService, 'error');
     component.ngOnInit();
     const req = httpMock.expectOne('http://localhost:8080/usuarios');
     req.error(new ErrorEvent('Network error'));
     
-    expect(console.error).toHaveBeenCalledWith('Error al cargar usuarios', jasmine.any(Object));
+    expect(loggerService.error).toHaveBeenCalledWith('Error al cargar usuarios', jasmine.any(Object));
   });
 
   it('should navigate to edit page when editar is called', () => {

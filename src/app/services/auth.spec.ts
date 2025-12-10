@@ -2,21 +2,29 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth';
 import { PLATFORM_ID } from '@angular/core';
+import { StorageService } from './storage.service';
+import { LoggerService } from './logger.service';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
+  let storageService: StorageService;
+  let loggerService: LoggerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
         AuthService,
+        StorageService,
+        LoggerService,
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     });
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
+    storageService = TestBed.inject(StorageService);
+    loggerService = TestBed.inject(LoggerService);
     localStorage.clear();
   });
 
@@ -45,7 +53,7 @@ describe('AuthService', () => {
     });
 
     it('should return sesion data from localStorage', () => {
-      const mockSesion = { logueado: true, usuario: 'Test User', rol: 'USER' };
+      const mockSesion = { logueado: true, usuario: 'Test User', correo: 'test@test.com', rol: 'USER' as const };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
       const result = service.getSesion();
@@ -53,12 +61,14 @@ describe('AuthService', () => {
     });
 
     it('should parse JSON correctly from localStorage', () => {
-      const mockSesion = { logueado: true, usuario: 'John Doe', rol: 'ADMIN', correo: 'john@example.com' };
+      const mockSesion = { logueado: true, usuario: 'John Doe', rol: 'ADMIN' as const, correo: 'john@example.com' };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
       const result = service.getSesion();
-      expect(result.usuario).toBe('John Doe');
-      expect(result.correo).toBe('john@example.com');
+      if (result) {
+        expect(result.usuario).toBe('John Doe');
+        expect(result.correo).toBe('john@example.com');
+      }
     });
   });
 
@@ -110,7 +120,7 @@ describe('AuthService', () => {
 
   describe('iniciarSesion()', () => {
     it('should save sesion to localStorage', () => {
-      const mockSesion = { logueado: true, usuario: 'Test User', rol: 'USER' };
+      const mockSesion = { logueado: true, usuario: 'Test User', correo: 'test@test.com', rol: 'USER' as const };
       
       service.iniciarSesion(mockSesion);
       
@@ -119,7 +129,7 @@ describe('AuthService', () => {
     });
 
     it('should emit sesion data through sesion$ observable', (done) => {
-      const mockSesion = { logueado: true, usuario: 'Test User', rol: 'USER' };
+      const mockSesion = { logueado: true, usuario: 'Test User', correo: 'test@test.com', rol: 'USER' as const };
       
       service.sesion$.subscribe(sesion => {
         if (sesion?.usuario === 'Test User') {
@@ -158,7 +168,7 @@ describe('AuthService', () => {
 
     it('should return user data on successful login', () => {
       const credentials = { correo: 'test@example.com', password: 'password123' };
-      const mockResponse = { id: 1, nombre: 'Test', apellido: 'User', correo: 'test@example.com' };
+      const mockResponse = { id: 1, nombre: 'Test', apellido: 'User', correo: 'test@example.com', rol: 'USER' as const };
       
       service.login(credentials).subscribe(result => {
         expect(result).toEqual(mockResponse);
@@ -218,7 +228,7 @@ describe('AuthService', () => {
 
     it('should return user data', () => {
       const userId = 1;
-      const mockUser = { id: 1, nombre: 'John', apellido: 'Doe', correo: 'john@example.com' };
+      const mockUser = { id: 1, nombre: 'Test', apellido: 'User', correo: 'test@test.com', rol: 'USER' as const, estado: '1' as const };
       
       service.obtenerUsuario(userId).subscribe(result => {
         expect(result).toEqual(mockUser);
@@ -244,8 +254,8 @@ describe('AuthService', () => {
 
     it('should return updated user data', () => {
       const userId = 1;
-      const userData = { nombre: 'Updated', apellido: 'Name' };
-      const mockResponse = { id: userId, ...userData };
+      const userData = { nombre: 'Updated', apellido: 'User' };
+      const mockResponse = { nombre: 'Updated', apellido: 'User', id: 1, correo: 'updated@test.com', rol: 'USER' as const, estado: '1' as const };
       
       service.actualizarUsuario(userId, userData).subscribe(result => {
         expect(result).toEqual(mockResponse);

@@ -4,10 +4,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { routes } from '../../app.routes';
 import { AuthService } from '../../services/auth';
+import { StorageService } from '../../services/storage.service';
+import { LoggerService } from '../../services/logger.service';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { of, throwError } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { PLATFORM_ID } from '@angular/core';
 
 describe('Registro', () => {
   let component: RegisterComponent;
@@ -20,8 +23,8 @@ describe('Registro', () => {
     nombre: 'John',
     apellido: 'Doe',
     correo: 'john@test.com',
-    rol: 'USER',
-    estado: '1'
+    rol: 'USER' as const,
+    estado: '1' as const
   };
 
   beforeEach(async () => {
@@ -30,7 +33,12 @@ describe('Registro', () => {
       providers: [
         provideRouter(routes),
         AuthService,
+        StorageService,
+        LoggerService,
         FormBuilder,
+        {
+          provide: PLATFORM_ID, useValue: 'browser'
+        },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -143,7 +151,7 @@ describe('Registro', () => {
     });
 
     spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
-    spyOn(authService, 'registrarUsuario').and.returnValue(of({}));
+    spyOn(authService, 'registrarUsuario').and.returnValue(of({ nombre: 'Test', apellido: 'User', correo: 'test@test.com', rol: 'USER' as const, estado: '1' as const }));
     
     component.registrar();
     
@@ -251,7 +259,7 @@ describe('Registro', () => {
     });
 
     spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
-    spyOn(authService, 'registrarUsuario').and.returnValue(of({}));
+    spyOn(authService, 'registrarUsuario').and.returnValue(of({ nombre: 'Juan', apellido: 'Pérez', correo: 'juan@example.com', rol: 'USER' as const, estado: '1' as const }));
 
     component.registrar();
 
@@ -284,7 +292,7 @@ describe('Registro', () => {
     });
 
     spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
-    spyOn(authService, 'registrarUsuario').and.returnValue(of({}));
+    spyOn(authService, 'registrarUsuario').and.returnValue(of({ nombre: 'Juan', apellido: 'Pérez', correo: 'new@example.com', rol: 'USER' as const, estado: '1' as const }));
 
     component.registrar();
 
@@ -306,7 +314,7 @@ describe('Registro', () => {
     });
 
     spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
-    spyOn(authService, 'registrarUsuario').and.returnValue(of({}));
+    spyOn(authService, 'registrarUsuario').and.returnValue(of({ nombre: 'Test', apellido: 'User', correo: 'test@example.com', rol: 'USER' as const, estado: '1' as const }));
 
     component.registrar();
 
@@ -357,7 +365,7 @@ describe('Registro', () => {
       password2: '123456'
     });
 
-    spyOn(authService, 'actualizarUsuario').and.returnValue(of({}));
+    spyOn(authService, 'actualizarUsuario').and.returnValue(of({ nombre: 'Juan', apellido: 'Pérez', correo: 'juan@example.com', rol: 'USER' as const, estado: '1' }));
     spyOn(router, 'navigate');
 
     component.registrar();
@@ -376,7 +384,7 @@ describe('Registro', () => {
       password2: '123456'
     });
 
-    spyOn(authService, 'actualizarUsuario').and.returnValue(of({}));
+    spyOn(authService, 'actualizarUsuario').and.returnValue(of({ nombre: 'Juan', apellido: 'Pérez', correo: 'juan@example.com', rol: 'USER' as const, estado: '1' }));
     spyOn(router, 'navigate');
 
     component.registrar();

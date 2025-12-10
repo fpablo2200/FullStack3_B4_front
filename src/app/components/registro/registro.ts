@@ -6,6 +6,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { ActivatedRoute } from '@angular/router';
+import { LoggerService } from '../../services/logger.service';
+import { StorageService } from '../../services/storage.service';
+import { Usuario } from '../../models/usuario.model';
+import { Sesion } from '../../models/sesion.model';
 
 @Component({
   selector: 'app-registro',
@@ -29,7 +33,9 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private logger: LoggerService,
+    private storage: StorageService
   ) {}
 
   ngOnInit(): void {
@@ -151,8 +157,8 @@ export class RegisterComponent implements OnInit {
           apellido,
           correo,
           password,
-          rol: "USER",
-          estado: "1"
+          rol: "USER" as const,
+          estado: "1" as const
         };
 
         this.authService.registrarUsuario(nuevoUsuario).subscribe({
@@ -167,7 +173,7 @@ export class RegisterComponent implements OnInit {
           }, 1500);
           },
           error: (err) => {
-            console.error(err);
+            this.logger.error('Error al registrar usuario', err);
             this.error = 'Hubo un error al registrar el usuario.';
           }
         });
