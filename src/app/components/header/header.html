@@ -9,8 +9,8 @@
     
     <nav class="navbar-menu">
         
-      <a *ngIf="rol === 'ADMIN'" href="/list-usuarios" class="nav-link">Usuarios</a>
-      <a href="/lista-resultado" class="nav-link">Resultados</a>
+      <a *ngIf="rol === 'ADMIN'" routerLink="/list-usuarios" class="nav-link">Usuarios</a>
+      <a routerLink="/lista-resultado" class="nav-link">Resultados</a>
       <a routerLink="/detalle-resultado" class="nav-link">Registrar resultado</a>
       <a  (click)="logout()" class="nav-link">Cerrar sesión</a>
     </nav>
