@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RegisterComponent } from './registro';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
@@ -15,6 +15,14 @@ describe('Registro', () => {
   let authService: AuthService;
   let router: Router;
   let activatedRoute: ActivatedRoute;
+
+  const mockUser = {
+    nombre: 'John',
+    apellido: 'Doe',
+    correo: 'john@test.com',
+    rol: 'USER',
+    estado: '1'
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -127,13 +135,20 @@ describe('Registro', () => {
     component.error = 'Previous error';
     component.exito = 'Previous success';
     component.registerForm.patchValue({
-      nombre: '',
-      apellido: '',
-      correo: 'test@test.com'
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'test@test.com',
+      password: '123456',
+      password2: '123456'
     });
+
+    spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
+    spyOn(authService, 'registrarUsuario').and.returnValue(of({}));
+    
     component.registrar();
-    fixture.detectChanges();
-    expect(component.error).not.toBe('Previous error');
+    
+    expect(component.error).toBe('');
+    expect(component.exito).not.toBe('Previous success');
   });
 
   it('should have rol initialized from localStorage', () => {
@@ -150,18 +165,8 @@ describe('Registro', () => {
   });
 
   it('should provide form controls access via get f()', () => {
-    if (component['f']) {
-      expect(component['f']['nombre']).toBeTruthy();
-    }
-  });
-
-  it('should have ReactiveFormsModule imported', () => {
-    expect(component.registerForm).toBeTruthy();
-  });
-
-  it('should have CommonModule imported', () => {
-    const compiled = fixture.nativeElement;
-    expect(compiled).toBeTruthy();
+    const controls = component.f;
+    expect(controls['nombre']).toBeTruthy();
   });
 
   it('should initialize with empty error message', () => {
@@ -190,10 +195,10 @@ describe('Registro', () => {
   });
 
   it('should load user data when cargarDatosUsuario is called', () => {
-    const mockUser = { nombre: 'John', apellido: 'Doe', correo: 'john@test.com' };
     spyOn(authService, 'obtenerUsuario').and.returnValue(of(mockUser));
     component.cargarDatosUsuario(1);
     expect(component.registerForm.get('nombre')?.value).toBe('John');
+    expect(component.registerForm.get('apellido')?.value).toBe('Doe');
   });
 
   it('should handle error when loading user data', () => {
@@ -212,5 +217,208 @@ describe('Registro', () => {
   it('should have default estado value', () => {
     const estadoControl = component.registerForm.get('estado');
     expect(estadoControl?.value).toBe('1');
+  });
+
+  it('should load data in edit mode', () => {
+    const mockActivatedRoute = TestBed.inject(ActivatedRoute);
+    spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
+    spyOn(authService, 'obtenerUsuario').and.returnValue(of(mockUser));
+
+    component.ngOnInit();
+
+    expect(component.editMode).toBeTrue();
+    expect(component.editingId).toBe(1);
+  });
+
+  it('should set error when loading data fails in edit mode', () => {
+    const mockActivatedRoute = TestBed.inject(ActivatedRoute);
+    spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
+    spyOn(authService, 'obtenerUsuario').and.returnValue(throwError(() => new Error('Error')));
+
+    component.ngOnInit();
+
+    expect(component.error).toBe('No se pudo cargar el resultado.');
+    expect(component.cargando).toBeFalse();
+  });
+
+  it('should call verificarCorreo on valid form submission', () => {
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'juan@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
+    spyOn(authService, 'registrarUsuario').and.returnValue(of({}));
+
+    component.registrar();
+
+    expect(authService.verificarCorreo).toHaveBeenCalledWith('juan@example.com');
+  });
+
+  it('should show error when email already exists', () => {
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'existing@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: true }));
+
+    component.registrar();
+
+    expect(component.error).toBe('El correo ya está registrado.');
+  });
+
+  it('should call registrarUsuario when email does not exist', () => {
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'new@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
+    spyOn(authService, 'registrarUsuario').and.returnValue(of({}));
+
+    component.registrar();
+
+    expect(authService.registrarUsuario).toHaveBeenCalledWith(jasmine.objectContaining({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'new@example.com',
+      rol: 'USER'
+    }));
+  });
+
+  it('should show success message on successful registration', () => {
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'new@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
+    spyOn(authService, 'registrarUsuario').and.returnValue(of({}));
+
+    component.registrar();
+
+    expect(component.exito).toContain('registrado con éxito');
+  });
+
+  it('should handle error on registration failure', () => {
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'new@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'verificarCorreo').and.returnValue(of({ existe: false }));
+    spyOn(authService, 'registrarUsuario').and.returnValue(throwError(() => new Error('Error')));
+
+    component.registrar();
+
+    expect(component.error).toContain('error al registrar');
+  });
+
+  it('should handle verificarCorreo error', () => {
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'new@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'verificarCorreo').and.returnValue(throwError(() => new Error('Error')));
+
+    component.registrar();
+
+    expect(component.error).toBe('Error al verificar el correo.');
+  });
+
+  it('should call actualizarUsuario in edit mode', () => {
+    component.editMode = true;
+    component.editingId = 1;
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'juan@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'actualizarUsuario').and.returnValue(of({}));
+    spyOn(router, 'navigate');
+
+    component.registrar();
+
+    expect(authService.actualizarUsuario).toHaveBeenCalledWith(1, jasmine.any(Object));
+  });
+
+  it('should show success message on successful update', () => {
+    component.editMode = true;
+    component.editingId = 1;
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'juan@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'actualizarUsuario').and.returnValue(of({}));
+    spyOn(router, 'navigate');
+
+    component.registrar();
+
+    expect(component.exito).toContain('actualizado con éxito');
+  });
+
+  it('should handle error on update failure', () => {
+    component.editMode = true;
+    component.editingId = 1;
+    component.registerForm.patchValue({
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      correo: 'juan@example.com',
+      password: '123456',
+      password2: '123456'
+    });
+
+    spyOn(authService, 'actualizarUsuario').and.returnValue(throwError(() => new Error('Error')));
+
+    component.registrar();
+
+    expect(component.error).toBe('Error al actualizar usuario.');
+  });
+
+  it('should clear password validators when loading user data', () => {
+    spyOn(authService, 'obtenerUsuario').and.returnValue(of(mockUser));
+    
+    component.cargarDatosUsuario(1);
+
+    const passwordControl = component.registerForm.get('password');
+    const password2Control = component.registerForm.get('password2');
+
+    expect(passwordControl?.hasError('minlength')).toBeFalsy();
+  });
+
+  it('should use passwordsIgualesValidator custom validator', () => {
+    const validator = component.passwordsIgualesValidator(component.registerForm);
+    component.registerForm.get('password')?.setValue('pass1');
+    component.registerForm.get('password2')?.setValue('pass2');
+    
+    const result = component.passwordsIgualesValidator(component.registerForm);
+    expect(result).toEqual({ contrasenasNoCoinciden: true });
   });
 });

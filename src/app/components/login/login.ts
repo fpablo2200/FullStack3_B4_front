@@ -69,8 +69,8 @@ export class LoginComponent implements OnInit {
 
         this.loading = false;
 
-        // Redirección
-        window.location.href = '/lista-resultado';
+        // Redirección usando Router
+        this.router.navigate(['/lista-resultado']);
       },
       error: (err) => {
         console.error('Error login:', err);

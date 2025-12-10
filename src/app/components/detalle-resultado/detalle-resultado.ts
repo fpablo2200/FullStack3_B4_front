@@ -81,7 +81,7 @@ ngOnInit(): void {
       this.resultadoService.actualizar(this.editingId, datos).subscribe({
         next: () => {
           this.mensaje = 'Resultado actualizado.';
-          window.location.href = '/lista-resultado';
+          this.router.navigate(['/lista-resultado']);
         },
         error: () => this.error = 'Error al actualizar.'
       });
@@ -90,7 +90,7 @@ ngOnInit(): void {
       this.resultadoService.crear(datos).subscribe({
         next: () => {
           this.mensaje = 'Resultado creado.';
-          window.location.href = '/lista-resultado';
+          this.router.navigate(['/lista-resultado']);
         },
         error: () => this.error = 'Error al crear.'
       });
@@ -99,7 +99,7 @@ ngOnInit(): void {
 
 
   cancelar() {
-    window.location.href = '/lista-resultado';
+    this.router.navigate(['/lista-resultado']);
   }
   get f() {
     return this.detalleForm.controls;

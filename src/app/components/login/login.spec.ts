@@ -1,20 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { routes } from '../../app.routes';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PLATFORM_ID } from '@angular/core';
+import { AuthService } from '../../services/auth';
+import { of, throwError } from 'rxjs';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let authService: AuthService;
+  let router: Router;
+
+  const mockUsuario = {
+    nombre: 'Juan',
+    apellido: 'Pérez',
+    correo: 'juan@example.com',
+    rol: 'USER'
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LoginComponent, HttpClientTestingModule, ReactiveFormsModule],
       providers: [
         provideRouter(routes),
+        AuthService,
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     })
@@ -22,6 +34,12 @@ describe('LoginComponent', () => {
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    authService = TestBed.inject(AuthService);
+    router = TestBed.inject(Router);
+  });
+
+  afterEach(() => {
+    localStorage.clear();
   });
 
   it('should create', () => {
@@ -97,25 +115,16 @@ describe('LoginComponent', () => {
     expect(component.loginForm.get('password')?.touched).toBeTrue();
   });
 
-  it('should set error to true on failed login', () => {
-    fixture.detectChanges();
-    component.loginForm.get('email')?.setValue('test@example.com');
-    component.loginForm.get('password')?.setValue('wrongpassword');
-    
-    // The error flag should be set after login attempt
-    component.error = true;
-    expect(component.error).toBeTrue();
-  });
-
   it('should not submit form when form is invalid', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('');
     component.loginForm.get('password')?.setValue('');
     
-    const initialError = component.error;
+    spyOn(authService, 'login');
     component.login();
     
     expect(component.loginForm.invalid).toBeTrue();
+    expect(authService.login).not.toHaveBeenCalled();
   });
 
   it('should have form invalid when email is missing', () => {
@@ -140,5 +149,113 @@ describe('LoginComponent', () => {
     component.loginForm.get('password')?.setValue('password123');
     
     expect(component.loginForm.valid).toBeTrue();
+  });
+
+  it('should call auth service login on valid form submission', () => {
+    fixture.detectChanges();
+    component.loginForm.get('email')?.setValue('test@example.com');
+    component.loginForm.get('password')?.setValue('password123');
+    
+    spyOn(authService, 'login').and.returnValue(of(mockUsuario));
+    spyOn(router, 'navigate');
+    
+    component.login();
+    
+    expect(authService.login).toHaveBeenCalledWith({
+      correo: 'test@example.com',
+      password: 'password123'
+    });
+  });
+
+  it('should set loading to false after successful login', () => {
+    fixture.detectChanges();
+    component.loginForm.get('email')?.setValue('test@example.com');
+    component.loginForm.get('password')?.setValue('password123');
+    
+    spyOn(authService, 'login').and.returnValue(of(mockUsuario));
+    spyOn(router, 'navigate');
+    
+    component.login();
+    
+    expect(component.loading).toBeFalse();
+  });
+
+  it('should store session in localStorage on successful login', () => {
+    fixture.detectChanges();
+    component.loginForm.get('email')?.setValue('test@example.com');
+    component.loginForm.get('password')?.setValue('password123');
+    
+    spyOn(authService, 'login').and.returnValue(of(mockUsuario));
+    spyOn(localStorage, 'setItem');
+    spyOn(router, 'navigate');
+    
+    component.login();
+    
+    expect(localStorage.setItem).toHaveBeenCalledWith('sesion', jasmine.any(String));
+  });
+
+  it('should navigate to lista-resultado on successful login', () => {
+    fixture.detectChanges();
+    component.loginForm.get('email')?.setValue('test@example.com');
+    component.loginForm.get('password')?.setValue('password123');
+    
+    spyOn(authService, 'login').and.returnValue(of(mockUsuario));
+    spyOn(router, 'navigate');
+    
+    component.login();
+    
+    expect(router.navigate).toHaveBeenCalledWith(['/lista-resultado']);
+  });
+
+  it('should set error to true on failed login', () => {
+    fixture.detectChanges();
+    component.loginForm.get('email')?.setValue('test@example.com');
+    component.loginForm.get('password')?.setValue('wrongpassword');
+    
+    spyOn(authService, 'login').and.returnValue(throwError(() => new Error('Login failed')));
+    
+    component.login();
+    
+    expect(component.error).toBeTrue();
+    expect(component.loading).toBeFalse();
+  });
+
+  it('should reset error flag when calling login', () => {
+    fixture.detectChanges();
+    component.error = true;
+    component.loginForm.get('email')?.setValue('test@example.com');
+    component.loginForm.get('password')?.setValue('password123');
+    
+    spyOn(authService, 'login').and.returnValue(of(mockUsuario));
+    
+    component.login();
+    
+    expect(component.error).toBeFalse();
+  });
+
+  it('should not call login if not in browser platform', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [LoginComponent, HttpClientTestingModule, ReactiveFormsModule],
+      providers: [
+        provideRouter(routes),
+        AuthService,
+        { provide: PLATFORM_ID, useValue: 'server' }
+      ]
+    });
+
+    fixture = TestBed.createComponent(LoginComponent);
+    component = fixture.componentInstance;
+    authService = TestBed.inject(AuthService);
+    fixture.detectChanges();
+
+    component.loginForm.get('email')?.setValue('test@example.com');
+    component.loginForm.get('password')?.setValue('password123');
+    
+    spyOn(authService, 'login').and.returnValue(of(mockUsuario));
+    
+    component.login();
+    
+    expect(authService.login).not.toHaveBeenCalled();
   });
 });

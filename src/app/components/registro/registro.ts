@@ -130,7 +130,7 @@ export class RegisterComponent implements OnInit {
         .subscribe({
           next: () => {
             this.exito = 'Usuario actualizado con éxito.';
-            setTimeout(() => window.location.href = '/list-usuarios', 1500);
+            setTimeout(() => this.router.navigate(['/list-usuarios']), 1500);
           },
           error: () => this.error = 'Error al actualizar usuario.'
         });
