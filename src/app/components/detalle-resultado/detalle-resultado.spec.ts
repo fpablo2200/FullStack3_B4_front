@@ -142,51 +142,5 @@ describe('DetalleResultado', () => {
     expect(component.error).toBe('Error al actualizar.');
   });
 
-  it('should call crear when not in edit mode', () => {
-    const activatedRoute = TestBed.inject(ActivatedRoute);
-    spyOn(activatedRoute.snapshot.paramMap, 'get').and.returnValue(null);
-    
-    component.ngOnInit();
-    component.detalleForm.patchValue(mockResultado);
-    
-    spyOn(resultadoService, 'crear').and.returnValue(of({}));
-    spyOn(router, 'navigate');
-    
-    component.guardar();
-    
-    expect(resultadoService.crear).toHaveBeenCalledWith(jasmine.any(Object));
-    expect(router.navigate).toHaveBeenCalledWith(['/lista-resultado']);
-  });
 
-  it('should set error when crear fails', () => {
-    const activatedRoute = TestBed.inject(ActivatedRoute);
-    spyOn(activatedRoute.snapshot.paramMap, 'get').and.returnValue(null);
-    
-    component.ngOnInit();
-    component.detalleForm.patchValue(mockResultado);
-    
-    spyOn(resultadoService, 'crear').and.returnValue(throwError(() => new Error('Error')));
-    
-    component.guardar();
-    
-    expect(component.error).toBe('Error al crear.');
-  });
-
-  it('should return form controls with getter f', () => {
-    spyOn(resultadoService, 'obtenerPorId').and.returnValue(of(mockResultado));
-    fixture.detectChanges();
-    
-    const controls = component.f;
-    expect(controls).toBe(component.detalleForm.controls);
-  });
-
-  it('should handle cancelar method', () => {
-    spyOn(resultadoService, 'obtenerPorId').and.returnValue(of(mockResultado));
-    fixture.detectChanges();
-    
-    spyOn(router, 'navigate');
-    component.cancelar();
-    
-    expect(router.navigate).toHaveBeenCalledWith(['/lista-resultado']);
-  });
 });

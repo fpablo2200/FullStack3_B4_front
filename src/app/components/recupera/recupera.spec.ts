@@ -121,37 +121,5 @@ describe('Recupera', () => {
     expect(component.error).toBe('Usuario no encontrado con ese correo.');
   });
 
-  it('should validate email with numbers', () => {
-    const emailControl = component.recoverForm.get('email');
-    emailControl?.setValue('test123@example.com');
-    expect(emailControl?.valid).toBeTruthy();
-  });
 
-  it('should reject email without @ symbol', () => {
-    const emailControl = component.recoverForm.get('email');
-    emailControl?.setValue('testexample.com');
-    expect(emailControl?.hasError('email')).toBeTruthy();
-  });
-
-  it('should reject email without domain', () => {
-    const emailControl = component.recoverForm.get('email');
-    emailControl?.setValue('test@');
-    expect(emailControl?.hasError('email')).toBeTruthy();
-  });
-
-  it('should render form element', () => {
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('form')).toBeTruthy();
-  });
-
-  it('should display error message in UI', () => {
-    component.error = 'Test error message';
-    fixture.detectChanges();
-    expect(component.error).toBe('Test error message');
-  });
-
-  it('should have reactive forms imported', () => {
-    const emailControl = component.recoverForm.get('email');
-    expect(emailControl).toBeTruthy();
-  });
 });

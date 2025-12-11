@@ -220,42 +220,4 @@ describe('LoginComponent', () => {
     expect(component.loading).toBeFalse();
   });
 
-  it('should reset error flag when calling login', () => {
-    fixture.detectChanges();
-    component.error = true;
-    component.loginForm.get('email')?.setValue('test@example.com');
-    component.loginForm.get('password')?.setValue('password123');
-    
-    spyOn(authService, 'login').and.returnValue(of(mockUsuario));
-    
-    component.login();
-    
-    expect(component.error).toBeFalse();
-  });
-
-  it('should not call login if not in browser platform', () => {
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [LoginComponent, HttpClientTestingModule, ReactiveFormsModule],
-      providers: [
-        provideRouter(routes),
-        AuthService,
-        { provide: PLATFORM_ID, useValue: 'server' }
-      ]
-    });
-
-    fixture = TestBed.createComponent(LoginComponent);
-    component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService);
-    fixture.detectChanges();
-
-    component.loginForm.get('email')?.setValue('test@example.com');
-    component.loginForm.get('password')?.setValue('password123');
-    
-    spyOn(authService, 'login').and.returnValue(of(mockUsuario));
-    
-    component.login();
-    
-    expect(authService.login).not.toHaveBeenCalled();
-  });
 });

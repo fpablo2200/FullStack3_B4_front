@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
 })
-export class Header {
+export class Header implements OnInit {
   rol: string | null = null;
   constructor(private router: Router) {}
 

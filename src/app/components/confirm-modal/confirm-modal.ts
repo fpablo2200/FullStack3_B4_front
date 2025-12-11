@@ -23,9 +23,9 @@ import { CommonModule } from '@angular/common';
 export class ConfirmModalComponent {
   @Input() titulo: string = '';
   @Input() mensaje: string = '';
-  @Output() onConfirm = new EventEmitter();
-  @Output() onCancel = new EventEmitter();
+  @Output() Confirm = new EventEmitter();
+  @Output() Cancel = new EventEmitter();
 
-  confirmar() { this.onConfirm.emit(); }
-  cancelar() { this.onCancel.emit(); }
+  confirmar() { this.Confirm.emit(); }
+  cancelar() { this.Cancel.emit(); }
 }
