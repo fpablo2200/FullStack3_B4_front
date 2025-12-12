@@ -35,66 +35,66 @@ describe('Header', () => {
     localStorage.clear();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render header element', () => {
+  it('debe renderizar el elemento header', () => {
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('header')).toBeTruthy();
   });
 
-  it('should display navigation menu', () => {
+  it('debe mostrar el menú de navegación', () => {
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('nav')).toBeTruthy();
   });
 
-  it('should show logout button when user is logged in', () => {
+  it('debe mostrar el botón de logout cuando el usuario está logueado', () => {
     localStorage.setItem('sesion', JSON.stringify({ rol: 'admin' }));
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.rol).toBe('admin');
   });
 
-  it('should not show logout button when user is not logged in', () => {
+  it('no debe mostrar el botón de logout cuando el usuario no está logueado', () => {
     localStorage.clear();
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.rol).toBeNull();
   });
 
-  it('should call logout when logout is clicked', () => {
+  it('debe llamar logout cuando se hace click en logout', () => {
     spyOn(router, 'navigate');
     spyOn(window.localStorage, 'removeItem');
     component.logout();
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
-  it('should have proper styling classes', () => {
+  it('debe tener las clases de estilo correctas', () => {
     const compiled = fixture.nativeElement;
     const header = compiled.querySelector('header');
     expect(header).toBeTruthy();
   });
 
-  it('should display application logo', () => {
+  it('debe mostrar el logo de la aplicación', () => {
     const compiled = fixture.nativeElement;
     const logo = compiled.querySelector('img') || compiled.querySelector('[data-test="logo"]');
     expect(logo || compiled.textContent).toBeTruthy();
   });
 
-  it('should have navigation links', () => {
+  it('debe tener enlaces de navegación', () => {
     const compiled = fixture.nativeElement;
     const nav = compiled.querySelector('nav');
     expect(nav).toBeTruthy();
   });
 
-  it('should handle responsive design', () => {
+  it('debe manejar el diseño responsive', () => {
     const compiled = fixture.nativeElement;
     const header = compiled.querySelector('header');
     expect(header).toBeTruthy();
   });
 
-  it('should update when authentication state changes', (done) => {
+  it('debe actualizarse cuando cambia el estado de autenticación', (done) => {
     localStorage.setItem('sesion', JSON.stringify({ rol: 'user' }));
     component.ngOnInit();
     fixture.detectChanges();
@@ -104,13 +104,13 @@ describe('Header', () => {
     });
   });
 
-  it('should navigate to login on logout', () => {
+  it('debe navegar a login al hacer logout', () => {
     spyOn(router, 'navigate');
     component.logout();
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
-  it('should display user information if available', (done) => {
+  it('debe mostrar información del usuario si está disponible', (done) => {
     const mockSesion = { rol: 'admin', email: 'test@test.com' };
     localStorage.setItem('sesion', JSON.stringify(mockSesion));
     component.ngOnInit();
@@ -122,51 +122,51 @@ describe('Header', () => {
     });
   });
 
-  it('should have correct header structure', () => {
+  it('debe tener la estructura correcta del header', () => {
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('header')).toBeTruthy();
   });
 
-  it('should initialize with proper state', () => {
+  it('debe inicializarse con el estado correcto', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to lista-resultado when goToLista is called', () => {
+  it('debe navegar a lista-resultado cuando se llama goToLista', () => {
     spyOn(router, 'navigate');
     component.goToLista();
     expect(router.navigate).toHaveBeenCalledWith(['/lista-resultado']);
   });
 
-  it('should parse and set rol from localStorage on init', () => {
+  it('debe parsear y establecer rol desde localStorage en init', () => {
     const mockSesion = { rol: 'doctor' };
     localStorage.setItem('sesion', JSON.stringify(mockSesion));
     component.ngOnInit();
     expect(component.rol).toBe('doctor');
   });
 
-  it('should handle missing sesion in localStorage', () => {
+  it('debe manejar la ausencia de sesion en localStorage', () => {
     localStorage.removeItem('sesion');
     component.ngOnInit();
     expect(component.rol).toBeNull();
   });
 
-  it('should clear localStorage on logout', () => {
+  it('debe limpiar localStorage al hacer logout', () => {
     spyOn(window.localStorage, 'removeItem');
     spyOn(router, 'navigate');
     component.logout();
     expect(window.localStorage.removeItem).toHaveBeenCalledWith('sesion');
   });
 
-  it('should have constructor with Router dependency', () => {
+  it('debe tener el constructor con dependencia Router', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render CommonModule directives', () => {
+  it('debe renderizar directivas de CommonModule', () => {
     const compiled = fixture.nativeElement;
     expect(compiled).toBeTruthy();
   });
 
-  it('should import RouterModule for navigation', () => {
+  it('debe importar RouterModule para navegación', () => {
     const compiled = fixture.nativeElement;
     expect(compiled).toBeTruthy();
   });

@@ -48,13 +48,13 @@ describe('DetalleResultado', () => {
     router = TestBed.inject(Router);
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     spyOn(resultadoService, 'obtenerPorId').and.returnValue(of(mockResultado));
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with validators', () => {
+  it('debe inicializar el formulario con validadores', () => {
     spyOn(resultadoService, 'obtenerPorId').and.returnValue(of(mockResultado));
     fixture.detectChanges();
     expect(component.detalleForm).toBeDefined();
@@ -63,7 +63,7 @@ describe('DetalleResultado', () => {
     expect(component.detalleForm.get('laboratorio')).toBeTruthy();
   });
 
-  it('should load data when id is provided', () => {
+  it('debe cargar datos cuando se proporciona id', () => {
     spyOn(resultadoService, 'obtenerPorId').and.returnValue(of(mockResultado));
     fixture.detectChanges();
     
@@ -73,7 +73,7 @@ describe('DetalleResultado', () => {
     expect(component.cargando).toBeFalse();
   });
 
-  it('should set error when loading fails', () => {
+  it('debe establecer error cuando la carga falla', () => {
     spyOn(resultadoService, 'obtenerPorId').and.returnValue(throwError(() => new Error('Error')));
     fixture.detectChanges();
     
@@ -81,7 +81,7 @@ describe('DetalleResultado', () => {
     expect(component.cargando).toBeFalse();
   });
 
-  it('should not call obtenerPorId when no id provided', () => {
+  it('no debe llamar obtenerPorId cuando no se proporciona id', () => {
     const activatedRoute = TestBed.inject(ActivatedRoute);
     spyOn(activatedRoute.snapshot.paramMap, 'get').and.returnValue(null);
     spyOn(resultadoService, 'obtenerPorId');
@@ -93,7 +93,7 @@ describe('DetalleResultado', () => {
     expect(component.cargando).toBeFalse();
   });
 
-  it('should not submit form if invalid', () => {
+  it('no debe enviar el formulario si es inválido', () => {
     spyOn(resultadoService, 'obtenerPorId').and.returnValue(of(mockResultado));
     fixture.detectChanges();
     
@@ -110,7 +110,7 @@ describe('DetalleResultado', () => {
     expect(component.detalleForm.touched).toBeTrue();
   });
 
-  it('should call actualizar when in edit mode', () => {
+  it('debe llamar actualizar cuando está en modo edición', () => {
     spyOn(resultadoService, 'obtenerPorId').and.returnValue(of(mockResultado));
     fixture.detectChanges();
     
@@ -127,7 +127,7 @@ describe('DetalleResultado', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/lista-resultado']);
   });
 
-  it('should set error when actualizar fails', () => {
+  it('debe establecer error cuando actualizar falla', () => {
     spyOn(resultadoService, 'obtenerPorId').and.returnValue(of(mockResultado));
     fixture.detectChanges();
     

@@ -21,13 +21,13 @@ describe('ResultadoService', () => {
   });
 
   describe('Initialization', () => {
-    it('should be created', () => {
+    it('debe crearse', () => {
       expect(service).toBeTruthy();
     });
   });
 
   describe('obtenerResultados()', () => {
-    it('should fetch all results', () => {
+    it('debe obtener todos los resultados', () => {
       const mockResultados: any[] = [
         { idResultado: 1, tipoAnalisis: 'Hemograma', estado: 'VALIDADO' },
         { idResultado: 2, tipoAnalisis: 'Perfil lipídico', estado: 'ENTREGADO' }
@@ -43,7 +43,7 @@ describe('ResultadoService', () => {
       req.flush(mockResultados);
     });
 
-    it('should handle empty results', () => {
+    it('debe manejar resultados vacíos', () => {
       service.obtenerResultados().subscribe((resultados: any[]) => {
         expect(resultados).toEqual([]);
       });
@@ -54,7 +54,7 @@ describe('ResultadoService', () => {
   });
 
   describe('obtenerPorId()', () => {
-    it('should fetch a specific result by ID', () => {
+    it('debe obtener un resultado específico por ID', () => {
       const resultadoId = 1;
       const mockResultado: any = {
         idResultado: 1,
@@ -72,7 +72,7 @@ describe('ResultadoService', () => {
       req.flush(mockResultado);
     });
 
-    it('should return result with correct ID', () => {
+    it('debe devolver un resultado con el ID correcto', () => {
       const resultadoId = 5;
       const mockResultado: any = {
         idResultado: 5,
@@ -90,7 +90,7 @@ describe('ResultadoService', () => {
   });
 
   describe('crear()', () => {
-    it('should create a new result', () => {
+    it('debe crear un nuevo resultado', () => {
       const nuevoResultado: any = {
         idExamen: 'EXA005',
         tipoAnalisis: 'Prueba de función hepática',
@@ -112,7 +112,7 @@ describe('ResultadoService', () => {
       req.flush(mockResponse);
     });
 
-    it('should send correct data in POST request', () => {
+    it('debe enviar los datos correctos en la solicitud POST', () => {
       const data: any = {
         idExamen: 'EXA010',
         tipoAnalisis: 'Test',
@@ -131,7 +131,7 @@ describe('ResultadoService', () => {
   });
 
   describe('actualizar()', () => {
-    it('should update an existing result', () => {
+    it('debe actualizar un resultado existente', () => {
       const resultadoId = 1;
       const datosActualizados: any = {
         tipoAnalisis: 'Hemograma completo actualizado',
@@ -150,7 +150,7 @@ describe('ResultadoService', () => {
       req.flush(mockResponse);
     });
 
-    it('should handle partial updates', () => {
+    it('debe manejar actualizaciones parciales', () => {
       const resultadoId = 3;
       const parcialData: any = { estado: 'VALIDADO' };
 
@@ -165,7 +165,7 @@ describe('ResultadoService', () => {
   });
 
   describe('eliminarResultado()', () => {
-    it('should delete a result', () => {
+    it('debe eliminar un resultado', () => {
       const resultadoId = 1;
 
       service.eliminarResultado(resultadoId).subscribe(() => {
@@ -177,7 +177,7 @@ describe('ResultadoService', () => {
       req.flush({});
     });
 
-    it('should handle delete response', () => {
+    it('debe manejar la respuesta de eliminación', () => {
       const resultadoId = 2;
 
       service.eliminarResultado(resultadoId).subscribe((response: any) => {
@@ -188,7 +188,7 @@ describe('ResultadoService', () => {
       req.flush({ message: 'Resultado eliminado' });
     });
 
-    it('should make DELETE request to correct URL', () => {
+    it('debe hacer la solicitud DELETE a la URL correcta', () => {
       const resultadoId = 7;
 
       service.eliminarResultado(resultadoId).subscribe();

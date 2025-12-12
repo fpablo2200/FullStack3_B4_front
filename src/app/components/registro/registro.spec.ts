@@ -55,11 +55,11 @@ describe('Registro', () => {
     localStorage.clear();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize registerForm with all controls', () => {
+  it('debe inicializar registerForm con todos los controles', () => {
     expect(component.registerForm.get('nombre')).toBeTruthy();
     expect(component.registerForm.get('apellido')).toBeTruthy();
     expect(component.registerForm.get('correo')).toBeTruthy();
@@ -69,69 +69,69 @@ describe('Registro', () => {
     expect(component.registerForm.get('rol')).toBeTruthy();
   });
 
-  it('should have required validators on nombre', () => {
+  it('debe tener validadores required en nombre', () => {
     const nombreControl = component.registerForm.get('nombre');
     nombreControl?.setValue('');
     expect(nombreControl?.hasError('required')).toBeTruthy();
   });
 
-  it('should have required validators on apellido', () => {
+  it('debe tener validadores required en apellido', () => {
     const apellidoControl = component.registerForm.get('apellido');
     apellidoControl?.setValue('');
     expect(apellidoControl?.hasError('required')).toBeTruthy();
   });
 
-  it('should have email validator on correo', () => {
+  it('debe tener validador de email en correo', () => {
     const correoControl = component.registerForm.get('correo');
     correoControl?.setValue('invalid-email');
     expect(correoControl?.hasError('email')).toBeTruthy();
   });
 
-  it('should accept valid email format', () => {
+  it('debe aceptar el formato de email válido', () => {
     const correoControl = component.registerForm.get('correo');
     correoControl?.setValue('test@example.com');
     expect(correoControl?.valid).toBeTruthy();
   });
 
-  it('should validate password minimum length', () => {
+  it('debe validar la longitud mínima de la contraseña', () => {
     const passwordControl = component.registerForm.get('password');
     passwordControl?.setValue('12345');
     expect(passwordControl?.hasError('minlength')).toBeTruthy();
   });
 
-  it('should accept password with 6 or more characters', () => {
+  it('debe aceptar contraseñas de 6 o más caracteres', () => {
     const passwordControl = component.registerForm.get('password');
     passwordControl?.setValue('123456');
     expect(passwordControl?.hasError('minlength')).toBeFalsy();
   });
 
-  it('should validate that passwords match', () => {
+  it('debe validar que las contraseñas coincidan', () => {
     component.registerForm.get('password')?.setValue('password123');
     component.registerForm.get('password2')?.setValue('password123');
     expect(component.registerForm.hasError('contrasenasNoCoinciden')).toBeFalsy();
   });
 
-  it('should show error when passwords do not match', () => {
+  it('debe mostrar error cuando las contraseñas no coinciden', () => {
     component.registerForm.get('password')?.setValue('password123');
     component.registerForm.get('password2')?.setValue('different');
     expect(component.registerForm.hasError('contrasenasNoCoinciden')).toBeTruthy();
   });
 
-  it('should initialize with editMode false', () => {
+  it('debe inicializar con editMode en false', () => {
     expect(component.editMode).toBeFalsy();
   });
 
-  it('should initialize with cargando false when no id param', () => {
+  it('debe inicializar con cargando en false cuando no hay id param', () => {
     expect(component.cargando).toBeFalsy();
   });
 
-  it('should set error message when form is invalid on registrar', () => {
+  it('debe establecer mensaje de error cuando el formulario es inválido al registrar', () => {
     component.registerForm.get('nombre')?.setValue('');
     component.registrar();
     expect(component.error).toContain('Revisa los campos');
   });
 
-  it('should clear error and exito messages at start of registrar', () => {
+  it('debe limpiar mensajes de error y exito al iniciar registrar', () => {
     component.error = 'Previous error';
     component.exito = 'Previous success';
     component.registerForm.patchValue({
@@ -151,39 +151,39 @@ describe('Registro', () => {
     expect(component.exito).not.toBe('Previous success');
   });
 
-  it('should have rol initialized from localStorage', () => {
+  it('debe inicializar rol desde localStorage', () => {
     const mockSesion = { rol: 'admin' };
     localStorage.setItem('sesion', JSON.stringify(mockSesion));
     component.ngOnInit();
     expect(component.rol).toBe('admin');
   });
 
-  it('should handle missing sesion in localStorage', () => {
+  it('debe manejar la ausencia de sesion en localStorage', () => {
     localStorage.removeItem('sesion');
     component.ngOnInit();
     expect(component.rol).toBeNull();
   });
 
-  it('should provide form controls access via get f()', () => {
+  it('debe proporcionar acceso a controles mediante get f()', () => {
     const controls = component.f;
     expect(controls['nombre']).toBeTruthy();
   });
 
-  it('should initialize with empty error message', () => {
+  it('debe inicializar con mensaje de error vacío', () => {
     expect(component.error).toBe('');
   });
 
-  it('should initialize with empty exito message', () => {
+  it('debe inicializar con mensaje de exito vacío', () => {
     expect(component.exito).toBe('');
   });
 
-  it('should mark all fields as touched when form is invalid', () => {
+  it('debe marcar todos los campos como tocados cuando el formulario es inválido', () => {
     component.registerForm.get('nombre')?.setValue('');
     component.registrar();
     expect(component.registerForm.touched).toBeTruthy();
   });
 
-  it('should accept valid form data', () => {
+  it('debe aceptar datos válidos del formulario', () => {
     component.registerForm.patchValue({
       nombre: 'Juan',
       apellido: 'Pérez',
@@ -194,32 +194,32 @@ describe('Registro', () => {
     expect(component.registerForm.valid).toBeTruthy();
   });
 
-  it('should load user data when cargarDatosUsuario is called', () => {
+  it('debe cargar datos del usuario cuando se llama cargarDatosUsuario', () => {
     spyOn(authService, 'obtenerUsuario').and.returnValue(of(mockUser));
     component.cargarDatosUsuario(1);
     expect(component.registerForm.get('nombre')?.value).toBe('John');
     expect(component.registerForm.get('apellido')?.value).toBe('Doe');
   });
 
-  it('should handle error when loading user data', () => {
+  it('debe manejar error al cargar datos del usuario', () => {
     spyOn(authService, 'obtenerUsuario').and.returnValue(throwError(() => new Error('Error')));
     component.cargarDatosUsuario(1);
     fixture.detectChanges();
     expect(component.error).toContain('Error');
   });
 
-  it('should validate correo is required', () => {
+  it('debe validar que correo es requerido', () => {
     const correoControl = component.registerForm.get('correo');
     correoControl?.setValue('');
     expect(correoControl?.hasError('required')).toBeTruthy();
   });
 
-  it('should have default estado value', () => {
+  it('debe tener valor por defecto en estado', () => {
     const estadoControl = component.registerForm.get('estado');
     expect(estadoControl?.value).toBe('1');
   });
 
-  it('should load data in edit mode', () => {
+  it('debe cargar datos en modo edición', () => {
     const mockActivatedRoute = TestBed.inject(ActivatedRoute);
     spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
     spyOn(authService, 'obtenerUsuario').and.returnValue(of(mockUser));
@@ -230,7 +230,7 @@ describe('Registro', () => {
     expect(component.editingId).toBe(1);
   });
 
-  it('should set error when loading data fails in edit mode', () => {
+  it('debe establecer error cuando falla la carga en modo edición', () => {
     const mockActivatedRoute = TestBed.inject(ActivatedRoute);
     spyOn(mockActivatedRoute.snapshot.paramMap, 'get').and.returnValue('1');
     spyOn(authService, 'obtenerUsuario').and.returnValue(throwError(() => new Error('Error')));
@@ -241,7 +241,7 @@ describe('Registro', () => {
     expect(component.cargando).toBeFalse();
   });
 
-  it('should call verificarCorreo on valid form submission', () => {
+  it('debe llamar verificarCorreo al enviar formulario válido', () => {
     component.registerForm.patchValue({
       nombre: 'Juan',
       apellido: 'Pérez',
@@ -258,7 +258,7 @@ describe('Registro', () => {
     expect(authService.verificarCorreo).toHaveBeenCalledWith('juan@example.com');
   });
 
-  it('should show error when email already exists', () => {
+  it('debe mostrar error cuando el correo ya existe', () => {
     component.registerForm.patchValue({
       nombre: 'Juan',
       apellido: 'Pérez',
@@ -274,7 +274,7 @@ describe('Registro', () => {
     expect(component.error).toBe('El correo ya está registrado.');
   });
 
-  it('should call registrarUsuario when email does not exist', () => {
+  it('debe llamar registrarUsuario cuando el correo no existe', () => {
     component.registerForm.patchValue({
       nombre: 'Juan',
       apellido: 'Pérez',
@@ -296,7 +296,7 @@ describe('Registro', () => {
     }));
   });
 
-  it('should show success message on successful registration', () => {
+  it('debe mostrar mensaje de éxito al registrarse correctamente', () => {
     component.registerForm.patchValue({
       nombre: 'Juan',
       apellido: 'Pérez',
@@ -313,7 +313,7 @@ describe('Registro', () => {
     expect(component.exito).toContain('registrado con éxito');
   });
 
-  it('should handle error on registration failure', () => {
+  it('debe manejar error en caso de fallo al registrar', () => {
     component.registerForm.patchValue({
       nombre: 'Juan',
       apellido: 'Pérez',
@@ -330,7 +330,7 @@ describe('Registro', () => {
     expect(component.error).toContain('error al registrar');
   });
 
-  it('should handle verificarCorreo error', () => {
+  it('debe manejar error de verificarCorreo', () => {
     component.registerForm.patchValue({
       nombre: 'Juan',
       apellido: 'Pérez',
@@ -346,7 +346,7 @@ describe('Registro', () => {
     expect(component.error).toBe('Error al verificar el correo.');
   });
 
-  it('should call actualizarUsuario in edit mode', () => {
+  it('debe llamar actualizarUsuario en modo edición', () => {
     component.editMode = true;
     component.editingId = 1;
     component.registerForm.patchValue({
@@ -365,7 +365,7 @@ describe('Registro', () => {
     expect(authService.actualizarUsuario).toHaveBeenCalledWith(1, jasmine.any(Object));
   });
 
-  it('should show success message on successful update', () => {
+  it('debe mostrar mensaje de éxito al actualizar correctamente', () => {
     component.editMode = true;
     component.editingId = 1;
     component.registerForm.patchValue({
@@ -384,7 +384,7 @@ describe('Registro', () => {
     expect(component.exito).toContain('actualizado con éxito');
   });
 
-  it('should handle error on update failure', () => {
+  it('debe manejar error en caso de fallo al actualizar', () => {
     component.editMode = true;
     component.editingId = 1;
     component.registerForm.patchValue({
@@ -402,7 +402,7 @@ describe('Registro', () => {
     expect(component.error).toBe('Error al actualizar usuario.');
   });
 
-  it('should clear password validators when loading user data', () => {
+  it('debe limpiar validadores de contraseña al cargar datos del usuario', () => {
     spyOn(authService, 'obtenerUsuario').and.returnValue(of(mockUser));
     
     component.cargarDatosUsuario(1);
@@ -413,7 +413,7 @@ describe('Registro', () => {
     expect(passwordControl?.hasError('minlength')).toBeFalsy();
   });
 
-  it('should use passwordsIgualesValidator custom validator', () => {
+  it('debe usar el validador personalizado passwordsIgualesValidator', () => {
     const validator = component.passwordsIgualesValidator(component.registerForm);
     component.registerForm.get('password')?.setValue('pass1');
     component.registerForm.get('password2')?.setValue('pass2');

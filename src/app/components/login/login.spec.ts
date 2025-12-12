@@ -42,18 +42,18 @@ describe('LoginComponent', () => {
     localStorage.clear();
   });
 
-  it('should create', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize loginForm on ngOnInit', () => {
+  it('debería inicializar loginForm en ngOnInit', () => {
     fixture.detectChanges();
     expect(component.loginForm).toBeDefined();
     expect(component.loginForm.get('email')).toBeDefined();
     expect(component.loginForm.get('password')).toBeDefined();
   });
 
-  it('should have email and password controls in form', () => {
+  it('debería tener controles email y password en el formulario', () => {
     fixture.detectChanges();
     const emailControl = component.loginForm.get('email');
     const passwordControl = component.loginForm.get('password');
@@ -61,50 +61,50 @@ describe('LoginComponent', () => {
     expect(passwordControl).toBeTruthy();
   });
 
-  it('should validate email as required', () => {
+  it('debería validar que email es obligatorio', () => {
     fixture.detectChanges();
     const emailControl = component.loginForm.get('email');
     emailControl?.setValue('');
     expect(emailControl?.hasError('required')).toBeTrue();
   });
 
-  it('should validate email format', () => {
+  it('debería validar el formato del email', () => {
     fixture.detectChanges();
     const emailControl = component.loginForm.get('email');
     emailControl?.setValue('invalid-email');
     expect(emailControl?.hasError('email')).toBeTrue();
   });
 
-  it('should accept valid email', () => {
+  it('debería aceptar un email válido', () => {
     fixture.detectChanges();
     const emailControl = component.loginForm.get('email');
     emailControl?.setValue('valid@example.com');
     expect(emailControl?.valid).toBeTrue();
   });
 
-  it('should validate password as required', () => {
+  it('debería validar que la contraseña es obligatoria', () => {
     fixture.detectChanges();
     const passwordControl = component.loginForm.get('password');
     passwordControl?.setValue('');
     expect(passwordControl?.hasError('required')).toBeTrue();
   });
 
-  it('should initialize error flag as false', () => {
+  it('debería inicializar la bandera de error en false', () => {
     expect(component.error).toBeFalse();
   });
 
-  it('should initialize loading flag as false', () => {
+  it('debería inicializar la bandera loading en false', () => {
     expect(component.loading).toBeFalse();
   });
 
-  it('should have get f() accessor for form controls', () => {
+  it('debería exponer get f() para controles del formulario', () => {
     fixture.detectChanges();
     const formControls = component.f;
     expect(formControls['email']).toBeDefined();
     expect(formControls['password']).toBeDefined();
   });
 
-  it('should mark all fields as touched on invalid form submission', () => {
+  it('debería marcar todos los campos como tocados al enviar formulario inválido', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('');
     component.loginForm.get('password')?.setValue('');
@@ -115,7 +115,7 @@ describe('LoginComponent', () => {
     expect(component.loginForm.get('password')?.touched).toBeTrue();
   });
 
-  it('should not submit form when form is invalid', () => {
+  it('no debería enviar el formulario cuando sea inválido', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('');
     component.loginForm.get('password')?.setValue('');
@@ -127,7 +127,7 @@ describe('LoginComponent', () => {
     expect(authService.login).not.toHaveBeenCalled();
   });
 
-  it('should have form invalid when email is missing', () => {
+  it('el formulario debería ser inválido cuando falta el email', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('');
     component.loginForm.get('password')?.setValue('password123');
@@ -135,7 +135,7 @@ describe('LoginComponent', () => {
     expect(component.loginForm.invalid).toBeTrue();
   });
 
-  it('should have form invalid when password is missing', () => {
+  it('el formulario debería ser inválido cuando falta la contraseña', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('test@example.com');
     component.loginForm.get('password')?.setValue('');
@@ -143,7 +143,7 @@ describe('LoginComponent', () => {
     expect(component.loginForm.invalid).toBeTrue();
   });
 
-  it('should have form valid with all required fields', () => {
+  it('el formulario debería ser válido con todos los campos requeridos', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('test@example.com');
     component.loginForm.get('password')?.setValue('password123');
@@ -151,7 +151,7 @@ describe('LoginComponent', () => {
     expect(component.loginForm.valid).toBeTrue();
   });
 
-  it('should call auth service login on valid form submission', () => {
+  it('debería llamar a authService.login al enviar formulario válido', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('test@example.com');
     component.loginForm.get('password')?.setValue('password123');
@@ -167,7 +167,7 @@ describe('LoginComponent', () => {
     });
   });
 
-  it('should set loading to false after successful login', () => {
+  it('debería establecer loading en false tras login exitoso', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('test@example.com');
     component.loginForm.get('password')?.setValue('password123');
@@ -180,7 +180,7 @@ describe('LoginComponent', () => {
     expect(component.loading).toBeFalse();
   });
 
-  it('should store session in localStorage on successful login', () => {
+  it('debería guardar la sesión en localStorage tras login exitoso', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('test@example.com');
     component.loginForm.get('password')?.setValue('password123');
@@ -194,7 +194,7 @@ describe('LoginComponent', () => {
     expect(localStorage.setItem).toHaveBeenCalledWith('sesion', jasmine.any(String));
   });
 
-  it('should navigate to lista-resultado on successful login', () => {
+  it('debería navegar a lista-resultado tras login exitoso', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('test@example.com');
     component.loginForm.get('password')?.setValue('password123');
@@ -207,7 +207,7 @@ describe('LoginComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/lista-resultado']);
   });
 
-  it('should set error to true on failed login', () => {
+  it('debería establecer error en true cuando el login falla', () => {
     fixture.detectChanges();
     component.loginForm.get('email')?.setValue('test@example.com');
     component.loginForm.get('password')?.setValue('wrongpassword');

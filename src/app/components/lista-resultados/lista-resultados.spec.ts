@@ -54,25 +54,25 @@ describe('ListaResultadoComponent', () => {
     spyOn(resultadoService, 'obtenerResultados').and.returnValue(of(mockResultados));
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('should have resultados array initialized', () => {
+  it('debe tener el array resultados inicializado', () => {
     fixture.detectChanges();
     expect(component.resultados).toBeDefined();
     expect(Array.isArray(component.resultados)).toBeTrue();
   });
 
-  it('should load resultados on init', () => {
+  it('debe cargar resultados en ngOnInit', () => {
     fixture.detectChanges();
     expect(resultadoService.obtenerResultados).toHaveBeenCalled();
     expect(component.resultados.length).toBe(2);
     expect(component.cargando).toBeFalse();
   });
 
-  it('should set error when loading fails', () => {
+  it('debe establecer error cuando la carga falla', () => {
     (resultadoService.obtenerResultados as jasmine.Spy).and.returnValue(throwError(() => new Error('Error')));
     fixture.detectChanges();
     
@@ -80,13 +80,13 @@ describe('ListaResultadoComponent', () => {
     expect(component.cargando).toBeFalse();
   });
 
-  it('should call cargarResultados method', () => {
+  it('debe llamar al método cargarResultados', () => {
     spyOn(component, 'cargarResultados').and.callThrough();
     component.ngOnInit();
     expect(component.cargarResultados).toHaveBeenCalled();
   });
 
-  it('should open modal with correct id', () => {
+  it('debe abrir el modal con el id correcto', () => {
     fixture.detectChanges();
     component.abrirModal(1);
     
@@ -94,7 +94,7 @@ describe('ListaResultadoComponent', () => {
     expect(component.idSeleccionado).toBe(1);
   });
 
-  it('should cancel modal and reset idSeleccionado', () => {
+  it('debe cancelar el modal y resetear idSeleccionado', () => {
     fixture.detectChanges();
     component.abrirModal(1);
     component.cancelar();
@@ -103,7 +103,7 @@ describe('ListaResultadoComponent', () => {
     expect(component.idSeleccionado).toBeNull();
   });
 
-  it('should confirm elimination and filter resultados', () => {
+  it('debe confirmar la eliminación y filtrar resultados', () => {
     fixture.detectChanges();
     component.resultados = [...mockResultados];
     component.idSeleccionado = 1;
@@ -117,7 +117,7 @@ describe('ListaResultadoComponent', () => {
     expect(component.mostrarModal).toBeFalse();
   });
 
-  it('should set error when elimination fails', () => {
+  it('debe establecer error cuando la eliminación falla', () => {
     fixture.detectChanges();
     component.idSeleccionado = 1;
     
@@ -129,7 +129,7 @@ describe('ListaResultadoComponent', () => {
     expect(component.mostrarModal).toBeFalse();
   });
 
-  it('should not eliminate if idSeleccionado is null', () => {
+  it('no debe eliminar si idSeleccionado es null', () => {
     fixture.detectChanges();
     component.idSeleccionado = null;
     
@@ -140,7 +140,7 @@ describe('ListaResultadoComponent', () => {
     expect(resultadoService.eliminarResultado).not.toHaveBeenCalled();
   });
 
-  it('should navigate to edit page', () => {
+  it('debe navegar a la página de edición', () => {
     fixture.detectChanges();
     spyOn(router, 'navigate');
     
@@ -149,7 +149,7 @@ describe('ListaResultadoComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/detalle-resultado', 1]);
   });
 
-  it('should call ngOnDestroy and complete destroy$', () => {
+  it('debe llamar ngOnDestroy y completar destroy$', () => {
     fixture.detectChanges();
     spyOn(component['destroy$'], 'next');
     spyOn(component['destroy$'], 'complete');
@@ -160,28 +160,28 @@ describe('ListaResultadoComponent', () => {
     expect(component['destroy$'].complete).toHaveBeenCalled();
   });
 
-  it('should display correct columns in the table', () => {
+  it('debe mostrar las columnas correctas en la tabla', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
     const headers = compiled.querySelectorAll('th');
     expect(headers.length).toBeGreaterThan(0);
   });
 
-  it('should render the results-card div', () => {
+  it('debe renderizar el div results-card', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
     const card = compiled.querySelector('.results-card');
     expect(card).toBeTruthy();
   });
 
-  it('should render table with responsive class', () => {
+  it('debe renderizar la tabla con la clase responsive', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
     const tableContainer = compiled.querySelector('.table-responsive');
     expect(tableContainer).toBeTruthy();
   });
 
-  it('should handle eliminar method with confirm', () => {
+  it('debe manejar el método eliminar con confirmación', () => {
     fixture.detectChanges();
     component.resultados = [...mockResultados];
     
@@ -193,7 +193,7 @@ describe('ListaResultadoComponent', () => {
     expect(component.resultados[0].idResultado).toBe(2);
   });
 
-  it('should not eliminate if confirm is cancelled', () => {
+  it('no debe eliminar si la confirmación es cancelada', () => {
     fixture.detectChanges();
     component.resultados = [...mockResultados];
     

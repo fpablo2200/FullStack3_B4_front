@@ -26,11 +26,11 @@ describe('AuthService', () => {
   });
 
   describe('Initialization', () => {
-    it('should be created', () => {
+    it('debe crearse', () => {
       expect(service).toBeTruthy();
     });
 
-    it('should initialize sesion$ as observable', (done) => {
+    it('debe inicializar sesion$ como observable', (done) => {
       service.sesion$.subscribe(sesion => {
         expect(sesion).toBeNull();
         done();
@@ -39,12 +39,12 @@ describe('AuthService', () => {
   });
 
   describe('getSesion()', () => {
-    it('should return null when no sesion in localStorage', () => {
+    it('debe devolver null cuando no hay sesion en localStorage', () => {
       const result = service.getSesion();
       expect(result).toBeNull();
     });
 
-    it('should return sesion data from localStorage', () => {
+    it('debe devolver los datos de sesion desde localStorage', () => {
       const mockSesion = { logueado: true, usuario: 'Test User', rol: 'USER' };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
@@ -52,7 +52,7 @@ describe('AuthService', () => {
       expect(result).toEqual(mockSesion);
     });
 
-    it('should parse JSON correctly from localStorage', () => {
+    it('debe parsear correctamente JSON desde localStorage', () => {
       const mockSesion = { logueado: true, usuario: 'John Doe', rol: 'ADMIN', correo: 'john@example.com' };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
@@ -63,12 +63,12 @@ describe('AuthService', () => {
   });
 
   describe('estaLogueado()', () => {
-    it('should return false when no sesion exists', () => {
+    it('debe devolver false cuando no existe sesion', () => {
       const result = service.estaLogueado();
       expect(result).toBeFalse();
     });
 
-    it('should return true when sesion.logueado is true', () => {
+    it('debe devolver true cuando sesion.logueado es true', () => {
       const mockSesion = { logueado: true, usuario: 'Test User' };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
@@ -76,7 +76,7 @@ describe('AuthService', () => {
       expect(result).toBeTrue();
     });
 
-    it('should return false when sesion.logueado is false', () => {
+    it('debe devolver false cuando sesion.logueado es false', () => {
       const mockSesion = { logueado: false, usuario: 'Test User' };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
@@ -86,12 +86,12 @@ describe('AuthService', () => {
   });
 
   describe('esAdmin()', () => {
-    it('should return false when no sesion exists', () => {
+    it('debe devolver false cuando no existe sesion', () => {
       const result = service.esAdmin();
       expect(result).toBeFalse();
     });
 
-    it('should return true when sesion.rol is ADMIN', () => {
+    it('debe devolver true cuando sesion.rol es ADMIN', () => {
       const mockSesion = { logueado: true, usuario: 'Admin User', rol: 'ADMIN' };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
@@ -99,7 +99,7 @@ describe('AuthService', () => {
       expect(result).toBeTrue();
     });
 
-    it('should return false when sesion.rol is not ADMIN', () => {
+    it('debe devolver false cuando sesion.rol no es ADMIN', () => {
       const mockSesion = { logueado: true, usuario: 'Regular User', rol: 'USER' };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
@@ -109,7 +109,7 @@ describe('AuthService', () => {
   });
 
   describe('iniciarSesion()', () => {
-    it('should save sesion to localStorage', () => {
+    it('debe guardar la sesion en localStorage', () => {
       const mockSesion = { logueado: true, usuario: 'Test User', rol: 'USER' };
       
       service.iniciarSesion(mockSesion);
@@ -118,7 +118,7 @@ describe('AuthService', () => {
       expect(storedSesion).toEqual(mockSesion);
     });
 
-    it('should emit sesion data through sesion$ observable', (done) => {
+    it('debe emitir datos de sesion a través del observable sesion$', (done) => {
       const mockSesion = { logueado: true, usuario: 'Test User', rol: 'USER' };
       
       service.sesion$.subscribe(sesion => {
@@ -133,7 +133,7 @@ describe('AuthService', () => {
   });
 
   describe('cerrarSesion()', () => {
-    it('should remove sesion from localStorage', () => {
+    it('debe eliminar la sesion de localStorage', () => {
       const mockSesion = { logueado: true, usuario: 'Test User' };
       localStorage.setItem('sesion', JSON.stringify(mockSesion));
       
@@ -145,7 +145,7 @@ describe('AuthService', () => {
   });
 
   describe('login()', () => {
-    it('should make POST request with credentials', () => {
+    it('debe hacer una solicitud POST con las credenciales', () => {
       const credentials = { correo: 'test@example.com', password: 'password123' };
       
       service.login(credentials).subscribe();
@@ -156,7 +156,7 @@ describe('AuthService', () => {
       req.flush({ id: 1, nombre: 'Test', apellido: 'User' });
     });
 
-    it('should return user data on successful login', () => {
+    it('debe devolver datos de usuario en login exitoso', () => {
       const credentials = { correo: 'test@example.com', password: 'password123' };
       const mockResponse = { id: 1, nombre: 'Test', apellido: 'User', correo: 'test@example.com' };
       
@@ -170,7 +170,7 @@ describe('AuthService', () => {
   });
 
   describe('verificarCorreo()', () => {
-    it('should make GET request to verify email', () => {
+    it('debe hacer una solicitud GET para verificar el correo', () => {
       const email = 'test@example.com';
       
       service.verificarCorreo(email).subscribe();
@@ -180,7 +180,7 @@ describe('AuthService', () => {
       req.flush({ existe: false });
     });
 
-    it('should return exists status', () => {
+    it('debe devolver el estado de existencia', () => {
       const email = 'existing@example.com';
       
       service.verificarCorreo(email).subscribe(result => {
@@ -193,7 +193,7 @@ describe('AuthService', () => {
   });
 
   describe('registrarUsuario()', () => {
-    it('should make POST request with user data', () => {
+    it('debe hacer una solicitud POST con los datos del usuario', () => {
       const userData = { nombre: 'John', apellido: 'Doe', correo: 'john@example.com', password: 'pass123' };
       
       service.registrarUsuario(userData).subscribe();
@@ -206,7 +206,7 @@ describe('AuthService', () => {
   });
 
   describe('obtenerUsuario()', () => {
-    it('should make GET request for specific user', () => {
+    it('debe hacer una solicitud GET para un usuario específico', () => {
       const userId = 1;
       
       service.obtenerUsuario(userId).subscribe();
@@ -216,7 +216,7 @@ describe('AuthService', () => {
       req.flush({ id: 1, nombre: 'Test', apellido: 'User' });
     });
 
-    it('should return user data', () => {
+    it('debe devolver los datos del usuario', () => {
       const userId = 1;
       const mockUser = { id: 1, nombre: 'John', apellido: 'Doe', correo: 'john@example.com' };
       
@@ -230,7 +230,7 @@ describe('AuthService', () => {
   });
 
   describe('actualizarUsuario()', () => {
-    it('should make PUT request with user data', () => {
+    it('debe hacer una solicitud PUT con los datos del usuario', () => {
       const userId = 1;
       const userData = { nombre: 'Updated', apellido: 'Name' };
       
@@ -242,7 +242,7 @@ describe('AuthService', () => {
       req.flush({ id: userId, ...userData });
     });
 
-    it('should return updated user data', () => {
+    it('debe devolver los datos actualizados del usuario', () => {
       const userId = 1;
       const userData = { nombre: 'Updated', apellido: 'Name' };
       const mockResponse = { id: userId, ...userData };

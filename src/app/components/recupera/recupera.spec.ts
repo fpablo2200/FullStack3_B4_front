@@ -29,52 +29,52 @@ describe('Recupera', () => {
     localStorage.clear();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize recoverForm with email control', () => {
+  it('debe inicializar recoverForm con el control email', () => {
     expect(component.recoverForm).toBeTruthy();
     expect(component.recoverForm.get('email')).toBeTruthy();
   });
 
-  it('should have email as required field', () => {
+  it('debe tener email como campo requerido', () => {
     const emailControl = component.recoverForm.get('email');
     emailControl?.setValue('');
     expect(emailControl?.hasError('required')).toBeTruthy();
   });
 
-  it('should validate email format', () => {
+  it('debe validar el formato del email', () => {
     const emailControl = component.recoverForm.get('email');
     emailControl?.setValue('invalid-email');
     expect(emailControl?.hasError('email')).toBeTruthy();
   });
 
-  it('should accept valid email', () => {
+  it('debe aceptar un email válido', () => {
     const emailControl = component.recoverForm.get('email');
     emailControl?.setValue('test@example.com');
     expect(emailControl?.valid).toBeTruthy();
   });
 
-  it('should initialize with empty messages', () => {
+  it('debe inicializarse con mensajes vacíos', () => {
     expect(component.mensaje).toBe('');
     expect(component.error).toBe('');
   });
 
-  it('should show error when form is invalid', () => {
+  it('debe mostrar error cuando el formulario es inválido', () => {
     component.recoverForm.get('email')?.setValue('');
     component.recuperar();
     expect(component.error).toBe('Por favor, ingresa un correo válido.');
   });
 
-  it('should show error when user not found', () => {
+  it('debe mostrar error cuando el usuario no es encontrado', () => {
     localStorage.setItem('usuarios', JSON.stringify([]));
     component.recoverForm.get('email')?.setValue('notfound@example.com');
     component.recuperar();
     expect(component.error).toBe('Usuario no encontrado con ese correo.');
   });
 
-  it('should display message when user is found', () => {
+  it('debe mostrar mensaje cuando el usuario es encontrado', () => {
     const mockUser = { nombre: 'John', email: 'john@example.com', password: 'pass123' };
     localStorage.setItem('usuarios', JSON.stringify([mockUser]));
     component.recoverForm.get('email')?.setValue('john@example.com');
@@ -83,7 +83,7 @@ describe('Recupera', () => {
     expect(component.mensaje).toContain('pass123');
   });
 
-  it('should clear previous messages when recuperar is called', () => {
+  it('debe limpiar mensajes previos cuando se llama recuperar', () => {
     component.mensaje = 'Previous message';
     component.error = 'Previous error';
     component.recoverForm.get('email')?.setValue('');
@@ -91,12 +91,12 @@ describe('Recupera', () => {
     expect(component.mensaje).toBe('');
   });
 
-  it('should provide form controls access via get f()', () => {
+  it('debe proporcionar acceso a los controles del formulario vía get f()', () => {
     const controls = component.f;
     expect(controls['email']).toBeTruthy();
   });
 
-  it('should handle multiple users in localStorage', () => {
+  it('debe manejar múltiples usuarios en localStorage', () => {
     const users = [
       { nombre: 'User1', email: 'user1@example.com', password: 'pass1' },
       { nombre: 'User2', email: 'user2@example.com', password: 'pass2' }
@@ -107,14 +107,14 @@ describe('Recupera', () => {
     expect(component.mensaje).toContain('User2');
   });
 
-  it('should handle empty usuarios array', () => {
+  it('debe manejar un arreglo usuarios vacío', () => {
     localStorage.setItem('usuarios', JSON.stringify([]));
     component.recoverForm.get('email')?.setValue('any@example.com');
     component.recuperar();
     expect(component.error).toBe('Usuario no encontrado con ese correo.');
   });
 
-  it('should handle missing usuarios in localStorage', () => {
+  it('debe manejar la ausencia de usuarios en localStorage', () => {
     localStorage.removeItem('usuarios');
     component.recoverForm.get('email')?.setValue('test@example.com');
     component.recuperar();

@@ -35,11 +35,11 @@ describe('authGuard', () => {
     localStorage.clear();
   });
 
-  it('should be created', () => {
+  it('debe crearse', () => {
     expect(authGuard).toBeTruthy();
   });
 
-  it('should return true if user is logged in', () => {
+  it('debe devolver true si el usuario está logueado', () => {
     spyOn(authService, 'estaLogueado').and.returnValue(true);
 
     const result = TestBed.runInInjectionContext(() => 
@@ -50,7 +50,7 @@ describe('authGuard', () => {
     expect(router.navigate).not.toHaveBeenCalled();
   });
 
-  it('should return false if user is not logged in', () => {
+  it('debe devolver false si el usuario no está logueado', () => {
     spyOn(authService, 'estaLogueado').and.returnValue(false);
 
     const result = TestBed.runInInjectionContext(() => 
@@ -60,7 +60,7 @@ describe('authGuard', () => {
     expect(result).toBeFalse();
   });
 
-  it('should redirect to /login if user is not logged in', () => {
+  it('debe redirigir a /login si el usuario no está logueado', () => {
     spyOn(authService, 'estaLogueado').and.returnValue(false);
 
     TestBed.runInInjectionContext(() => 
@@ -70,7 +70,7 @@ describe('authGuard', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
-  it('should call estaLogueado method', () => {
+  it('debe llamar al método estaLogueado', () => {
     spyOn(authService, 'estaLogueado').and.returnValue(true);
 
     TestBed.runInInjectionContext(() => 
@@ -80,7 +80,7 @@ describe('authGuard', () => {
     expect(authService.estaLogueado).toHaveBeenCalled();
   });
 
-  it('should handle multiple calls correctly', () => {
+  it('debe manejar múltiples llamadas correctamente', () => {
     spyOn(authService, 'estaLogueado').and.returnValue(true);
 
     const result1 = TestBed.runInInjectionContext(() => 
@@ -95,7 +95,7 @@ describe('authGuard', () => {
     expect(authService.estaLogueado).toHaveBeenCalledTimes(2);
   });
 
-  it('should work with different route snapshots', () => {
+  it('debe funcionar con distintos snapshots de ruta', () => {
     spyOn(authService, 'estaLogueado').and.returnValue(true);
     
     const route1 = { params: { id: '1' } } as any as ActivatedRouteSnapshot;
@@ -112,7 +112,7 @@ describe('authGuard', () => {
     expect(result2).toBeTrue();
   });
 
-  it('should work with different state URLs', () => {
+  it('debe funcionar con diferentes URLs de estado', () => {
     spyOn(authService, 'estaLogueado').and.returnValue(false);
     
     const state1 = { url: '/admin' } as RouterStateSnapshot;
