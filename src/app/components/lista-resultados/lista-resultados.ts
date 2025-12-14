@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // Importa ActivatedRoute y NavigationEnd
 import { Router, RouterModule, ActivatedRoute, NavigationEnd } from '@angular/router'; 
@@ -26,6 +26,8 @@ export class ListaResultadoComponent implements OnInit, OnDestroy { // IMPLEMENT
   
   // Agrega un Subject para manejar la desuscripción de Observables
   private destroy$ = new Subject<void>(); 
+  private _confirmModalSubscribed = false;
+
 
   constructor(
     private router: Router,
@@ -83,12 +85,14 @@ export class ListaResultadoComponent implements OnInit, OnDestroy { // IMPLEMENT
   }
 
   cancelar() {
+    console.log('[ListaResultado] cancelar() called - hiding modal');
     this.mostrarModal = false;
     this.idSeleccionado = null;
   }
   
   confirmarEliminacion() {
-    if (!this.idSeleccionado) return;
+    console.log('[ListaResultado] confirmarEliminacion() called, idSeleccionado=', this.idSeleccionado);
+    if (this.idSeleccionado == null) return;
 
     this.resultadoService.eliminarResultado(this.idSeleccionado).subscribe({
       next: () => {
@@ -97,11 +101,13 @@ export class ListaResultadoComponent implements OnInit, OnDestroy { // IMPLEMENT
           r => Number(r.idResultado) !== Number(this.idSeleccionado)
         );
         this.mostrarModal = false;
+        console.log('[ListaResultado] eliminar OK, id=', this.idSeleccionado);
         // Opcional: podrías llamar a this.cargarResultados() aquí para recargar la lista completa, pero filtrar es más eficiente.
       },
       error: () => {
         this.error = 'No se pudo eliminar el registro.';
         this.mostrarModal = false;
+        console.log('[ListaResultado] eliminar ERROR, id=', this.idSeleccionado);
       }
     });
   }

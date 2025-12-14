@@ -6,15 +6,15 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-  <div class="modal-backdrop" (click)="cancelar()"></div>
+  <div class="app-confirm-backdrop" (click)="cancelar($event)"></div>
 
-  <div class="modal">
+  <div class="app-confirm-dialog">
     <h3>{{ titulo }}</h3>
     <p>{{ mensaje }}</p>
 
-    <div class="modal-buttons">
-      <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
-      <button class="btn-confirm" (click)="confirmar()">Sí, eliminar</button>
+    <div class="app-confirm-buttons">
+      <button class="app-btn-cancel" (click)="cancelar($event)">Cancelar</button>
+      <button class="app-btn-confirm" (click)="confirmar($event)">Sí, eliminar</button>
     </div>
   </div>
   `,
@@ -23,9 +23,22 @@ import { CommonModule } from '@angular/common';
 export class ConfirmModalComponent {
   @Input() titulo: string = '';
   @Input() mensaje: string = '';
-  @Output() Confirm = new EventEmitter();
-  @Output() Cancel = new EventEmitter();
+  @Output() Confirm = new EventEmitter<void>();
+  @Output() Cancel = new EventEmitter<void>();
 
-  confirmar() { this.Confirm.emit(); }
-  cancelar() { this.Cancel.emit(); }
+  confirmar(event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    console.log('[ConfirmModal] confirmar() called - emitting Confirm');
+    this.Confirm.emit();
+  }
+
+  cancelar(event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    console.log('[ConfirmModal] cancelar() called - emitting Cancel');
+    this.Cancel.emit();
+  }
 }

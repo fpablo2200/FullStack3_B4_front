@@ -39,7 +39,20 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('debería inicializar loginForm en ngOnInit', () => {
+    fixture.detectChanges();
+    expect(component.loginForm).toBeDefined();
+    expect(component.loginForm.get('email')).toBeDefined();
+    expect(component.loginForm.get('password')).toBeDefined();
+  });
 
+  it('debería tener controles email y password en el formulario', () => {
+    fixture.detectChanges();
+    const emailControl = component.loginForm.get('email');
+    const passwordControl = component.loginForm.get('password');
+    expect(emailControl).toBeTruthy();
+    expect(passwordControl).toBeTruthy();
+  });
 
   it('debería validar que email es obligatorio', () => {
     fixture.detectChanges();
